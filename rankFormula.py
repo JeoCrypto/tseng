@@ -1,15 +1,9 @@
-def classify_ranking(tweet):
-    if tweet['retweet_count'] > 0:
-        return 5
-    elif tweet['favorite_count'] > 0:
-        return 4
-    elif tweet['favorite_count'] == 0 and tweet['retweet_count'] == 0:
-        return 1
-    else:
-        return 2
+# Create a new column called 'ranking'
+df['ranking'] = df['retweet_count'] + df['favorite_count'] + df['number_coments'] + df['number_retweets_with_comments']
 
-# Apply the function to the tweets
-tweets['ranking'] = tweets.apply(classify_ranking, axis=1)
 
-# Print the top 5 most positive tweets
-print(tweets.nlargest(5, 'ranking'))
+# Sort the dataframe by ranking
+df.sort_values(by='ranking', ascending=False)
+
+# Create a new column called 'ranking_class'
+df['ranking_class'] = df['ranking'].apply(lambda x: 1 if x < 100 else 2 if x < 1000 else 3 if x < 10000 else 4 if x < 100000 else 5)
